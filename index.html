@@ -10,76 +10,21 @@
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        body {
-            font-family: 'Cairo', sans-serif;
-            background-color: #111827; /* Dark background */
-            color: #f9fafb;
-        }
-        .card {
-            background-color: #1f2937;
-            border: 1px solid #374151;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2), 0 4px 6px -2px rgba(0, 0, 0, 0.1);
-        }
-        .modal-backdrop {
-            background-color: rgba(0, 0, 0, 0.7);
-            transition: opacity 0.3s ease;
-        }
-        .modal-content {
-            background-color: #1f2937;
-            transition: transform 0.3s ease;
-        }
-        .btn-primary {
-            background-color: #3b82f6;
-            color: white;
-            transition: background-color 0.2s;
-        }
-        .btn-primary:hover {
-            background-color: #2563eb;
-        }
-        .btn-secondary {
-            background-color: #4b5563;
-            color: white;
-            transition: background-color 0.2s;
-        }
-        .btn-secondary:hover {
-            background-color: #374151;
-        }
-        .btn-danger {
-             background-color: #ef4444;
-             color: white;
-             transition: background-color 0.2s;
-        }
-        .btn-danger:hover {
-            background-color: #dc2626;
-        }
-        .form-input {
-            background-color: #374151;
-            border: 1px solid #4b5563;
-            color: white;
-        }
-        .form-input:focus {
-            outline: none;
-            border-color: #3b82f6;
-            box-shadow: 0 0 0 2px #1d4ed8;
-        }
-        /* Custom scrollbar */
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #1f2937;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #4b5563;
-            border-radius: 10px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #6b7280;
-        }
+        body { font-family: 'Cairo', sans-serif; background-color: #111827; color: #f9fafb; }
+        .card { background-color: #1f2937; border: 1px solid #374151; transition: transform 0.3s ease, box-shadow 0.3s ease; }
+        .card:hover { transform: translateY(-5px); box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2), 0 4px 6px -2px rgba(0, 0, 0, 0.1); }
+        .modal-backdrop { background-color: rgba(0, 0, 0, 0.7); transition: opacity 0.3s ease; }
+        .modal-content { background-color: #1f2937; transition: transform 0.3s ease; }
+        .btn-primary { background-color: #3b82f6; color: white; transition: background-color 0.2s; }
+        .btn-primary:hover { background-color: #2563eb; }
+        .btn-secondary { background-color: #4b5563; color: white; transition: background-color 0.2s; }
+        .btn-secondary:hover { background-color: #374151; }
+        .btn-danger { background-color: #ef4444; color: white; transition: background-color 0.2s; }
+        .btn-danger:hover { background-color: #dc2626; }
+        .form-input { background-color: #374151; border: 1px solid #4b5563; color: white; }
+        .form-input:focus { outline: none; border-color: #3b82f6; box-shadow: 0 0 0 2px #1d4ed8; }
+        .image-gallery-btn { position: absolute; top: 50%; transform: translateY(-50%); background-color: rgba(0,0,0,0.5); border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; }
+        .image-gallery-btn:hover { background-color: rgba(0,0,0,0.8); }
     </style>
 </head>
 <body>
@@ -90,21 +35,15 @@
             <h1 class="text-3xl font-bold text-white">
                 imou store <span class="text-red-500">🇹🇳</span>
             </h1>
-            <button id="adminPanelBtn" class="hidden btn-secondary py-2 px-4 rounded-lg items-center gap-2" title="لوحة تحكم المدير">
-                <i class="fas fa-user-shield"></i>
-                <span>لوحة التحكم</span>
-            </button>
         </div>
     </header>
 
     <!-- Main Content -->
     <main class="container mx-auto p-6">
-        <!-- Search and Add Section -->
         <div class="mb-8 p-4 bg-gray-800 rounded-lg shadow-md flex flex-col md:flex-row gap-4 items-center justify-between">
             <div class="relative w-full md:w-1/2">
-                <input type="text" id="searchInput" placeholder="ابحث عن حساب أو منتج بالاسم أو بالسعر..." class="form-input w-full p-3 pr-10 rounded-lg">
+                <input type="text" id="searchInput" placeholder="ابحث عن حساب أو منتج..." class="form-input w-full p-3 pr-10 rounded-lg">
                 <i class="fas fa-search absolute top-1/2 right-3 transform -translate-y-1/2 text-gray-400"></i>
-                <small class="text-gray-400 mt-1 block">يمكنك البحث باسم الحساب (مثال: "حساب ببجي") أو بالسعر (مثال: "50").</small>
             </div>
             <button id="addProductBtn" class="btn-primary w-full md:w-auto py-3 px-6 rounded-lg font-semibold flex items-center justify-center gap-2">
                 <i class="fas fa-plus-circle"></i>
@@ -112,44 +51,39 @@
             </button>
         </div>
 
-        <!-- Products Grid -->
-        <div id="productsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            <!-- Product cards will be inserted here by JavaScript -->
-        </div>
-        <div id="noResults" class="hidden text-center py-16">
+        <div id="productsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"></div>
+        <div id="noResults" class="text-center py-16 hidden">
             <i class="fas fa-box-open fa-4x text-gray-500 mb-4"></i>
-            <h2 class="text-2xl font-semibold text-gray-400">لا توجد نتائج مطابقة لبحثك.</h2>
-            <p class="text-gray-500">جرّب كلمة بحث أخرى.</p>
+            <h2 class="text-2xl font-semibold text-gray-400">لا توجد منتجات معروضة حاليًا.</h2>
+            <p class="text-gray-500">كن أول من يضيف منتجًا!</p>
         </div>
     </main>
 
     <!-- Add/Edit Product Modal -->
     <div id="addProductModal" class="fixed inset-0 z-50 modal-backdrop items-center justify-center hidden opacity-0">
-        <div class="modal-content w-11/12 md:max-w-lg mx-auto rounded-xl shadow-lg p-6 transform -translate-y-10">
-            <div class="flex justify-between items-center border-b border-gray-600 pb-3 mb-4">
+        <div class="modal-content w-11/12 md:max-w-lg mx-auto rounded-xl shadow-lg p-6 transform -translate-y-10 max-h-[90vh] overflow-y-auto">
+            <div class="flex justify-between items-center border-b border-gray-600 pb-3 mb-4 sticky top-0 bg-inherit">
                 <h3 id="modalTitle" class="text-2xl font-bold">إضافة منتج جديد</h3>
-                <button id="closeAddModal" class="text-gray-400 hover:text-white">&times;</button>
+                <button class="close-modal-btn text-gray-400 hover:text-white text-3xl">&times;</button>
             </div>
             <div class="space-y-4">
-                <div id="paymentInstructions" class="p-4 bg-yellow-900/50 border border-yellow-700 rounded-lg text-yellow-200">
-                    <h4 class="font-bold flex items-center gap-2"><i class="fas fa-exclamation-triangle"></i> تعليمات النشر</h4>
-                    <p class="text-sm">لنشر منتجك، يجب دفع رسوم بقيمة <strong class="font-bold">3 دينار تونسي</strong>.</p>
-                    <p class="text-sm mt-1">يتم الدفع عبر تحويل رصيد Ooredoo إلى الرقم: <strong class="font-bold tracking-wider">46625630</strong>.</p>
-                    <p class="text-sm mt-2">بعد تحويل الرصيد، قم بملء البيانات واضغط على "نشر المنتج". سيتم مراجعة طلبك.</p>
+                <div class="p-4 bg-yellow-900/50 border border-yellow-700 rounded-lg text-yellow-200">
+                    <h4 class="font-bold"><i class="fas fa-exclamation-triangle"></i> تعليمات النشر</h4>
+                    <p class="text-sm">لنشر منتجك، يجب دفع رسوم <strong class="font-bold">3 دينار</strong> عبر تحويل رصيد Ooredoo إلى <strong class="font-bold tracking-wider">46625630</strong>.</p>
                 </div>
                 <input type="hidden" id="editingProductId">
-                <input type="text" id="productName" placeholder="اسم المنتج (مثال: حساب فري فاير)" class="form-input w-full p-3 rounded-lg">
-                <input type="number" id="productPrice" placeholder="السعر بالدينار التونسي (مثال: 50)" class="form-input w-full p-3 rounded-lg">
-                <textarea id="productDesc" placeholder="وصف قصير للمنتج ومميزاته" class="form-input w-full p-3 rounded-lg h-24"></textarea>
-                <input type="text" id="facebookLink" placeholder="رابط حسابك على فيسبوك للتواصل" class="form-input w-full p-3 rounded-lg">
+                <input type="text" id="productName" placeholder="اسم المنتج" class="form-input w-full p-3 rounded-lg">
+                <input type="number" id="productPrice" placeholder="السعر بالدينار التونسي" class="form-input w-full p-3 rounded-lg">
+                <textarea id="productDesc" placeholder="وصف المنتج" class="form-input w-full p-3 rounded-lg h-24"></textarea>
+                <input type="text" id="facebookLink" placeholder="رابط فيسبوك للتواصل" class="form-input w-full p-3 rounded-lg">
                 <div>
-                    <label for="productImage" class="block mb-2 text-sm font-medium text-gray-300">ارفع صورة للمنتج</label>
-                    <input type="file" id="productImage" accept="image/*" class="form-input w-full p-2 rounded-lg file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-600 file:text-white hover:file:bg-blue-700">
-                    <img id="imagePreview" src="" alt="معاينة الصورة" class="hidden mt-4 rounded-lg max-h-48 mx-auto"/>
+                    <label for="productImages" class="block mb-2 text-sm font-medium text-gray-300">ارفع صور المنتج (يمكنك اختيار أكثر من صورة)</label>
+                    <input type="file" id="productImages" accept="image/*" class="form-input w-full p-2" multiple>
+                    <div id="imagePreviewContainer" class="mt-4 grid grid-cols-3 gap-2"></div>
                 </div>
-                <div id="paymentConfirmationWrapper" class="flex items-center">
+                <div class="flex items-center">
                     <input type="checkbox" id="paymentConfirmation" class="form-input w-4 h-4 rounded">
-                    <label for="paymentConfirmation" class="mr-2 text-sm">أؤكد أنني قمت بتحويل مبلغ 3 دينار رصيد Ooredoo.</label>
+                    <label for="paymentConfirmation" class="mr-2 text-sm">أؤكد أنني قمت بتحويل مبلغ 3 دينار.</label>
                 </div>
                 <button id="submitProduct" class="btn-primary w-full p-3 rounded-lg font-bold">نشر المنتج</button>
             </div>
@@ -161,10 +95,14 @@
         <div class="modal-content w-11/12 md:max-w-2xl mx-auto rounded-xl shadow-lg p-6 transform -translate-y-10">
              <div class="flex justify-between items-center border-b border-gray-600 pb-3 mb-4">
                 <h3 id="viewProductName" class="text-2xl font-bold"></h3>
-                <button id="closeViewModal" class="text-gray-400 hover:text-white">&times;</button>
+                <button class="close-modal-btn text-gray-400 hover:text-white text-3xl">&times;</button>
             </div>
             <div>
-                <img id="viewProductImage" src="" class="w-full h-64 object-contain rounded-lg mb-4 bg-gray-900">
+                <div id="imageGallery" class="relative mb-4">
+                    <img id="viewProductImage" src="" class="w-full h-64 object-contain rounded-lg bg-gray-900">
+                    <button id="prevImageBtn" class="image-gallery-btn left-2"><i class="fas fa-chevron-left"></i></button>
+                    <button id="nextImageBtn" class="image-gallery-btn right-2"><i class="fas fa-chevron-right"></i></button>
+                </div>
                 <p class="text-2xl font-bold text-blue-400 mb-2"><span id="viewProductPrice"></span> دينار تونسي</p>
                 <p class="text-gray-300 mb-6" id="viewProductDesc"></p>
                 <a id="viewFacebookLink" href="#" target="_blank" class="btn-primary w-full p-3 rounded-lg font-bold flex items-center justify-center gap-2 text-lg">
@@ -175,198 +113,216 @@
         </div>
     </div>
     
-    <!-- Admin Panel Modal -->
-    <div id="adminModal" class="fixed inset-0 z-50 modal-backdrop items-center justify-center hidden opacity-0">
-        <div class="modal-content w-11/12 md:max-w-xl mx-auto rounded-xl shadow-lg p-6 transform -translate-y-10">
-             <div class="flex justify-between items-center border-b border-gray-600 pb-3 mb-4">
-                <h3 class="text-2xl font-bold">لوحة تحكم المدير</h3>
-                <button id="closeAdminModal" class="text-gray-400 hover:text-white">&times;</button>
-            </div>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-center">
-                <div class="bg-gray-700 p-4 rounded-lg">
-                    <p class="text-gray-400 text-sm">أرباح اليوم (منشورات جديدة)</p>
-                    <p class="text-3xl font-bold text-green-400"><span id="dailyProfit">0</span> <span class="text-lg">دينار</span></p>
-                </div>
-                <div class="bg-gray-700 p-4 rounded-lg">
-                    <p class="text-gray-400 text-sm">قيمة المنتجات المعروضة</p>
-                    <p class="text-3xl font-bold text-green-400"><span id="totalValue">0</span> <span class="text-lg">دينار</span></p>
-                </div>
-                <div class="bg-gray-700 p-4 rounded-lg">
-                    <p class="text-gray-400 text-sm">زوار اليوم (تقديري)</p>
-                    <p class="text-3xl font-bold text-blue-400">152</p>
-                </div>
-                <div class="bg-gray-700 p-4 rounded-lg">
-                    <p class="text-gray-400 text-sm">إجمالي المنشورات</p>
-                    <p id="totalPosts" class="text-3xl font-bold text-blue-400">0</p>
-                </div>
-            </div>
-             <p class="text-xs text-gray-500 mt-4 text-center">هذه إحصائيات تجريبية تتحدث بناءً على الإضافات والحذف.</p>
-        </div>
-    </div>
-    
     <!-- Custom Alert Modal -->
     <div id="alertModal" class="fixed top-5 right-5 z-50 bg-red-500 text-white py-3 px-5 rounded-lg shadow-lg transform translate-x-full transition-transform duration-300">
         <p id="alertMessage"></p>
     </div>
-    
-    <!-- Custom Confirm Modal -->
-    <div id="confirmModal" class="fixed inset-0 z-50 modal-backdrop items-center justify-center hidden opacity-0">
-        <div class="modal-content w-11/12 sm:max-w-sm mx-auto rounded-xl shadow-lg p-6 transform -translate-y-10">
-            <h3 class="text-lg font-bold mb-4" id="confirmTitle">هل أنت متأكد؟</h3>
-            <p class="text-sm text-gray-300 mb-6" id="confirmMessage">لا يمكن التراجع عن هذا الإجراء.</p>
-            <div class="flex justify-end gap-4">
-                <button id="confirmCancel" class="btn-secondary py-2 px-4 rounded-lg">إلغاء</button>
-                <button id="confirmOk" class="btn-danger py-2 px-4 rounded-lg">تأكيد الحذف</button>
-            </div>
-        </div>
-    </div>
-
 
 <script>
-    // This script will run after the HTML document is fully loaded
-    document.addEventListener('DOMContentLoaded', () => {
-        let isAdmin = false;
-        let products = [];
-        let newPostsToday = 0;
-        const POST_FEE = 3;
+document.addEventListener('DOMContentLoaded', () => {
+    // --- Admin Check ---
+    const urlParams = new URLSearchParams(window.location.search);
+    const isAdmin = urlParams.get('admin') === 'true';
+    if(isAdmin) {
+        document.body.classList.add('admin-mode');
+        console.log("Admin mode enabled.");
+    }
 
-        // --- Sample Data (for demonstration) ---
-        // These products will appear when the page loads for the first time.
-        const sampleProducts = [
-            { id: 1, name: 'حساب ببجي موبايل مستوى 70', price: 150, desc: 'حساب قديم فيه سكنات نادرة وأسلحة مطورة. الربط تويتر فقط.', facebook: 'https://facebook.com', image: 'https://placehold.co/600x400/1f2937/ffffff?text=PUBG+Account' },
-            { id: 2, name: 'حساب فري فاير أسطوري', price: 80, desc: 'حساب فيه شخصيات نادرة وفاير باسات قديمة. فرصة لا تعوض.', facebook: 'https://facebook.com', image: 'https://placehold.co/600x400/1f2937/ffffff?text=FreeFire+Account' },
-            { id: 3, name: 'حساب Netflix مشترك لمدة سنة', price: 50, desc: 'اشتراك نتفلكس رسمي لمدة 12 شهر بجودة 4K. مضمون.', facebook: 'https://facebook.com', image: 'https://placehold.co/600x400/1f2937/ffffff?text=Netflix+Account' },
-            { id: 4, name: 'حساب Clash of Clans ماكس تاون 14', price: 250, desc: 'قرية ماكس بالكامل مع دفاعات وجنود. جاهزة للحرب.', facebook: 'https://facebook.com', image: 'https://placehold.co/600x400/1f2937/ffffff?text=CoC+Account' },
-        ];
-        products = [...sampleProducts];
+    let products = [];
+    let currentImageIndex = 0;
+    let currentProductImages = [];
 
-        // --- Getting Elements from HTML ---
-        // We get all the interactive parts of the page to add functionality to them.
-        const productsGrid = document.getElementById('productsGrid');
-        const noResults = document.getElementById('noResults');
-        const searchInput = document.getElementById('searchInput');
-        const adminPanelBtn = document.getElementById('adminPanelBtn');
-        const addProductBtn = document.getElementById('addProductBtn');
+    // --- DOM Elements ---
+    const productsGrid = document.getElementById('productsGrid');
+    const noResults = document.getElementById('noResults');
+    const searchInput = document.getElementById('searchInput');
+    const addProductBtn = document.getElementById('addProductBtn');
 
-        // Modals
-        const addProductModal = document.getElementById('addProductModal');
-        const viewProductModal = document.getElementById('viewProductModal');
-        const adminModal = document.getElementById('adminModal');
-        const alertModal = document.getElementById('alertModal');
-        const alertMessage = document.getElementById('alertMessage');
-        const confirmModal = document.getElementById('confirmModal');
+    // Modals
+    const addProductModal = document.getElementById('addProductModal');
+    const viewProductModal = document.getElementById('viewProductModal');
+    const alertModal = document.getElementById('alertModal');
+    const alertMessage = document.getElementById('alertMessage');
 
-        // Modal Buttons
-        const closeAddModal = document.getElementById('closeAddModal');
-        const closeViewModal = document.getElementById('closeViewModal');
-        const closeAdminModal = document.getElementById('closeAdminModal');
-        const submitProductBtn = document.getElementById('submitProduct');
+    // --- Functions ---
+    function showAlert(message, type = 'error') {
+        alertMessage.textContent = message;
+        alertModal.classList.remove('bg-red-500', 'bg-green-500');
+        alertModal.classList.add(type === 'success' ? 'bg-green-500' : 'bg-red-500');
+        alertModal.classList.remove('translate-x-full');
+        setTimeout(() => {
+            alertModal.classList.add('translate-x-full');
+        }, 3000);
+    }
 
-        // --- Functions ---
+    function renderProducts(productsToRender = products) {
+        productsGrid.innerHTML = '';
+        noResults.style.display = productsToRender.length === 0 ? 'block' : 'none';
         
-        // This function enables the admin view (shows edit/delete buttons)
-        function enableAdminView() {
-            isAdmin = true;
-            adminPanelBtn.style.display = 'flex';
-            showAlert('تم تسجيل الدخول كمدير بنجاح.', 'success');
-            renderProducts(products); // Re-render to show admin buttons
+        productsToRender.forEach(product => {
+            const adminButtonsHTML = isAdmin ? `
+                <div class="flex gap-2 mt-2">
+                     <button class="admin-delete-btn w-full btn-danger text-white py-1 px-2 text-sm rounded-lg flex items-center justify-center gap-1" data-id="${product.id}" title="حذف المنشور"><i class="fas fa-trash"></i> حذف</button>
+                </div>
+            ` : '';
+
+            const card = document.createElement('div');
+            card.className = 'card rounded-lg overflow-hidden shadow-lg flex flex-col';
+            card.innerHTML = `
+                <img class="w-full h-48 object-cover" src="${product.images[0]}" alt="${product.name}" onerror="this.onerror=null;this.src='https://placehold.co/600x400/1f2937/ffffff?text=Image+Error';">
+                <div class="p-4 flex flex-col flex-grow">
+                    <h3 class="font-bold text-lg truncate mb-2 flex-grow" title="${product.name}">${product.name}</h3>
+                    <p class="text-blue-400 font-bold text-xl mb-4">${product.price} دينار</p>
+                    <button class="view-details-btn w-full btn-secondary py-2 px-4 rounded-lg mt-auto" data-id="${product.id}">عرض التفاصيل</button>
+                    ${adminButtonsHTML}
+                </div>
+            `;
+            productsGrid.appendChild(card);
+        });
+    }
+
+    function toggleModal(modal, show) {
+        if (show) {
+            modal.classList.remove('hidden');
+            setTimeout(() => modal.classList.remove('opacity-0'), 10);
+        } else {
+            modal.classList.add('opacity-0');
+            setTimeout(() => modal.classList.add('hidden'), 300);
         }
+    }
 
-        // This function asks for the admin password when the site loads
-        function promptForAdmin() {
-            // We use a sessionStorage to remember if the user has already been prompted.
-            if (!sessionStorage.getItem('adminPrompted')) {
-                const password = prompt("للدخول كمدير، الرجاء إدخال كلمة المرور:");
-                if (password === "admin123") {
-                    enableAdminView();
-                } else if (password !== null) {
-                    alert("كلمة المرور غير صحيحة. سيتم عرض الموقع كزائر عادي.");
-                }
-                sessionStorage.setItem('adminPrompted', 'true');
-            }
+    function updateGalleryImage() {
+        const viewProductImage = document.getElementById('viewProductImage');
+        if (currentProductImages.length > 0) {
+            viewProductImage.src = currentProductImages[currentImageIndex];
         }
+    }
 
-        // This function shows a small notification message
-        function showAlert(message, type = 'error') {
-            alertMessage.textContent = message;
-            alertModal.classList.remove('bg-red-500', 'bg-green-500');
-            alertModal.classList.add(type === 'success' ? 'bg-green-500' : 'bg-red-500');
-            alertModal.classList.remove('translate-x-full');
-            setTimeout(() => {
-                alertModal.classList.add('translate-x-full');
-            }, 3000);
+    // --- Event Listeners ---
+    addProductBtn.addEventListener('click', () => toggleModal(addProductModal, true));
+
+    document.querySelectorAll('.close-modal-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => toggleModal(e.target.closest('.modal-backdrop'), false));
+    });
+
+    window.addEventListener('click', (e) => {
+        if (e.target.classList.contains('modal-backdrop')) {
+            toggleModal(e.target, false);
         }
-        
-        // This function shows a confirmation dialog (e.g., "Are you sure you want to delete?")
-        function showConfirm(title, message, onConfirm) {
-            document.getElementById('confirmTitle').textContent = title;
-            document.getElementById('confirmMessage').textContent = message;
-            toggleModal(confirmModal, true);
+    });
 
-            const confirmOk = document.getElementById('confirmOk');
-            const confirmCancel = document.getElementById('confirmCancel');
+    searchInput.addEventListener('keyup', () => {
+        const searchTerm = searchInput.value.toLowerCase().trim();
+        const filteredProducts = products.filter(p => p.name.toLowerCase().includes(searchTerm) || p.price.toString().includes(searchTerm));
+        renderProducts(filteredProducts);
+    });
 
-            const okListener = () => {
-                onConfirm();
-                toggleModal(confirmModal, false);
-                cleanup();
-            };
-
-            const cancelListener = () => {
-                toggleModal(confirmModal, false);
-                cleanup();
-            };
-            
-            function cleanup() {
-                confirmOk.removeEventListener('click', okListener);
-                confirmCancel.removeEventListener('click', cancelListener);
-            }
-
-            confirmOk.addEventListener('click', okListener, { once: true });
-            confirmCancel.addEventListener('click', cancelListener, { once: true });
-        }
-        
-        // This function updates the stats in the admin panel
-        function updateAdminStats() {
-            if (!isAdmin) return;
-            const totalValue = products.reduce((sum, p) => sum + p.price, 0);
-            const totalPosts = products.length;
-            const dailyProfit = newPostsToday * POST_FEE;
-
-            document.getElementById('dailyProfit').textContent = dailyProfit;
-            document.getElementById('totalValue').textContent = totalValue;
-            document.getElementById('totalPosts').textContent = totalPosts;
-        }
-
-        // This is a very important function. It takes the product data and creates the HTML cards to display them.
-        function renderProducts(productsToRender) {
-            productsGrid.innerHTML = '';
-            noResults.classList.toggle('hidden', productsToRender.length > 0);
-            
-            productsToRender.forEach(product => {
-                const adminButtonsHTML = isAdmin ? `
-                    <div class="flex gap-2 mt-2">
-                         <button class="admin-edit-btn w-full bg-blue-600 hover:bg-blue-700 text-white py-1 px-2 text-sm rounded-lg flex items-center justify-center gap-1" data-id="${product.id}" title="تعديل المنشور"><i class="fas fa-edit"></i> تعديل</button>
-                         <button class="admin-delete-btn w-full btn-danger text-white py-1 px-2 text-sm rounded-lg flex items-center justify-center gap-1" data-id="${product.id}" title="حذف المنشور"><i class="fas fa-trash"></i> حذف</button>
-                    </div>
-                ` : '';
-
-                const card = document.createElement('div');
-                card.className = 'card rounded-lg overflow-hidden shadow-lg flex flex-col';
-                card.innerHTML = `
-                    <img class="w-full h-48 object-cover" src="${product.image}" alt="${product.name}" onerror="this.onerror=null;this.src='https://placehold.co/600x400/1f2937/ffffff?text=Image+Error';">
-                    <div class="p-4 flex flex-col flex-grow">
-                        <h3 class="font-bold text-lg truncate mb-2 flex-grow" title="${product.name}">${product.name}</h3>
-                        <p class="text-blue-400 font-bold text-xl mb-4">${product.price} دينار</p>
-                        <button class="view-details-btn w-full btn-secondary py-2 px-4 rounded-lg mt-auto" data-id="${product.id}">عرض التفاصيل</button>
-                        ${adminButtonsHTML}
-                    </div>
-                `;
-                productsGrid.appendChild(card);
+    document.getElementById('productImages').addEventListener('change', (e) => {
+        const previewContainer = document.getElementById('imagePreviewContainer');
+        previewContainer.innerHTML = '';
+        if (e.target.files.length > 0) {
+            Array.from(e.target.files).forEach(file => {
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    const img = document.createElement('img');
+                    img.src = event.target.result;
+                    img.className = 'w-full h-24 object-cover rounded-md';
+                    previewContainer.appendChild(img);
+                };
+                reader.readAsDataURL(file);
             });
-            updateAdminStats();
+        }
+    });
+
+    document.getElementById('submitProduct').addEventListener('click', () => {
+        const name = document.getElementById('productName').value.trim();
+        const price = document.getElementById('productPrice').value.trim();
+        const desc = document.getElementById('productDesc').value.trim();
+        const facebook = document.getElementById('facebookLink').value.trim();
+        const imageFiles = document.getElementById('productImages').files;
+        const confirmation = document.getElementById('paymentConfirmation').checked;
+
+        if (!name || !price || !desc || !facebook || imageFiles.length === 0) {
+            showAlert('الرجاء ملء جميع الحقول ورفع صورة واحدة على الأقل.');
+            return;
+        }
+        if (!isAdmin && !confirmation) {
+            showAlert('الرجاء تأكيد عملية الدفع أولاً.');
+            return;
+        }
+        
+        const imageUrls = Array.from(imageFiles).map(file => URL.createObjectURL(file));
+        
+        const newProduct = {
+            id: Date.now(),
+            name,
+            price: parseInt(price),
+            desc,
+            facebook,
+            images: imageUrls
+        };
+        
+        products.unshift(newProduct);
+        renderProducts();
+        toggleModal(addProductModal, false);
+        showAlert('تمت إضافة المنتج بنجاح.', 'success');
+    });
+
+    productsGrid.addEventListener('click', (e) => {
+        const target = e.target.closest('button');
+        if (!target) return;
+
+        const id = parseInt(target.dataset.id);
+        const product = products.find(p => p.id === id);
+        if (!product) return;
+
+        if (target.classList.contains('view-details-btn')) {
+            document.getElementById('viewProductName').textContent = product.name;
+            document.getElementById('viewProductPrice').textContent = product.price;
+            document.getElementById('viewProductDesc').textContent = product.desc;
+            document.getElementById('viewFacebookLink').href = product.facebook;
+            
+            currentProductImages = product.images;
+            currentImageIndex = 0;
+            updateGalleryImage();
+
+            const prevBtn = document.getElementById('prevImageBtn');
+            const nextBtn = document.getElementById('nextImageBtn');
+            if (currentProductImages.length <= 1) {
+                prevBtn.style.display = 'none';
+                nextBtn.style.display = 'none';
+            } else {
+                prevBtn.style.display = 'flex';
+                nextBtn.style.display = 'flex';
+            }
+
+            toggleModal(viewProductModal, true);
         }
 
-        // This function shows or hides the pop-up windows (modals)
-        function toggleModal(modal, show) {
-         
+        if (isAdmin && target.classList.contains('admin-delete-btn')) {
+            if (confirm('هل أنت متأكد من حذف هذا المنتج؟')) {
+                products = products.filter(p => p.id !== id);
+                renderProducts();
+                showAlert('تم حذف المنتج بنجاح.', 'success');
+            }
+        }
+    });
+
+    document.getElementById('nextImageBtn').addEventListener('click', () => {
+        currentImageIndex = (currentImageIndex + 1) % currentProductImages.length;
+        updateGalleryImage();
+    });
+
+    document.getElementById('prevImageBtn').addEventListener('click', () => {
+        currentImageIndex = (currentImageIndex - 1 + currentProductImages.length) % currentProductImages.length;
+        updateGalleryImage();
+    });
+
+    // --- Initial Page Load ---
+    renderProducts();
+});
+</script>
+
+</body>
+</html>
+```
