@@ -72,7 +72,7 @@
     <script type="module">
         // Import the functions you need from the SDKs you need
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-        import { getFirestore, collection, addDoc, onSnapshot, query, where, serverTimestamp, deleteDoc, doc, orderBy } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, onSnapshot, query, where, serverTimestamp, deleteDoc, doc, orderBy, Timestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
         // Your web app's Firebase configuration
         const firebaseConfig = {
@@ -105,7 +105,6 @@
 
         // --- Functions ---
         
-        // Function to convert a file to a Base64 string
         function toBase64(file) {
             return new Promise((resolve, reject) => {
                 const reader = new FileReader();
@@ -115,7 +114,6 @@
             });
         }
 
-        // Function to render products on the page
         function renderProducts(products) {
             productsGrid.innerHTML = '';
             noResults.style.display = products.length === 0 ? 'block' : 'none';
@@ -139,45 +137,45 @@
             });
         }
 
-        // --- Firestore Real-time Listener ---
         function listenToProducts(filterDate = null) {
             loader.style.display = 'block';
-            let q = query(collection(db, "products"), orderBy("createdAt", "desc"));
+            let q;
             
             if (filterDate) {
-                q = query(collection(db, "products"), where("createdAt", ">=", filterDate), orderBy("createdAt", "desc"));
+                q = query(productsCollection, where("createdAt", ">=", filterDate), orderBy("createdAt", "desc"));
+            } else {
+                q = query(productsCollection, orderBy("createdAt", "desc"));
             }
 
             onSnapshot(q, (snapshot) => {
                 const products = [];
-                snapshot.forEach(doc => {
-                    const productData = doc.data();
-                    const productId = doc.id;
-                    
-                    if (productData.createdAt) { // Check if createdAt exists
-                        const postDate = productData.createdAt.toDate();
-                        const fortyEightHoursAgo = new Date(Date.now() - 48 * 60 * 60 * 1000);
+                const fortyEightHoursAgo = new Date(Date.now() - 48 * 60 * 60 * 1000);
 
-                        // Auto-delete logic
-                        if (postDate < fortyEightHoursAgo && !isAdmin) { // Admins can see all posts
-                            deleteDoc(doc.ref); // Delete from Firestore
+                snapshot.forEach(docSnapshot => {
+                    const productData = docSnapshot.data();
+                    const productId = docSnapshot.id;
+                    
+                    if (productData.createdAt) {
+                        const postDate = productData.createdAt.toDate();
+                        
+                        if (postDate < fortyEightHoursAgo && !isAdmin) {
+                            deleteDoc(doc(db, "products", productId));
                         } else {
                             products.push({ id: productId, ...productData });
                         }
                     } else {
-                        // Handle cases where createdAt is null, maybe push it to be visible or log an error
                         products.push({ id: productId, ...productData });
                     }
                 });
                 renderProducts(products);
+            }, (error) => {
+                console.error("Error listening to products: ", error);
+                loader.style.display = 'none';
+                alert("حدث خطأ في الاتصال بقاعدة البيانات.");
             });
         }
 
-        // --- Event Listeners ---
-        addProductBtn.addEventListener('click', () => toggleModal(addProductModal, true));
-        document.querySelector('.close-modal-btn').addEventListener('click', () => toggleModal(addProductModal, false));
-        
-        submitProductBtn.addEventListener('click', async () => {
+        async function handleFormSubmit() {
             const name = document.getElementById('productName').value.trim();
             const price = document.getElementById('productPrice').value.trim();
             const desc = document.getElementById('productDesc').value.trim();
@@ -202,7 +200,7 @@
                     desc,
                     facebook,
                     images: base64Images,
-                    createdAt: serverTimestamp()
+                    createdAt: Timestamp.now()
                 });
 
                 toggleModal(addProductModal, false);
@@ -214,23 +212,28 @@
 
             } catch (error) {
                 console.error("Error adding document: ", error);
-                alert("حدث خطأ أثناء نشر المنتج.");
+                alert("حدث خطأ أثناء نشر المنتج. يرجى المحاولة مرة أخرى.");
             } finally {
                 submitProductBtn.disabled = false;
                 submitProductBtn.textContent = 'نشر المنتج';
             }
-        });
+        }
 
-        productsGrid.addEventListener('click', async (e) => {
+        async function handleDelete(e) {
             if (e.target.classList.contains('admin-delete-btn')) {
                 const id = e.target.dataset.id;
                 if (confirm('هل أنت متأكد من حذف هذا المنشور؟')) {
-                    await deleteDoc(doc(db, "products", id));
+                    try {
+                        await deleteDoc(doc(db, "products", id));
+                    } catch (error) {
+                        console.error("Error deleting document: ", error);
+                        alert("حدث خطأ أثناء الحذف.");
+                    }
                 }
             }
-        });
+        }
         
-        filterBtn.addEventListener('click', () => {
+        function handleFilterClick() {
             const threeHoursAgo = new Date(Date.now() - 3 * 60 * 60 * 1000);
             if (filterBtn.textContent.includes('آخر 3 ساعات')) {
                 listenToProducts(threeHoursAgo);
@@ -239,7 +242,7 @@
                 listenToProducts();
                 filterBtn.textContent = 'عرض آخر 3 ساعات';
             }
-        });
+        }
 
         function toggleModal(modal, show) {
             if (show) {
@@ -251,9 +254,15 @@
             }
         }
 
+        // --- Event Listeners ---
+        addProductBtn.addEventListener('click', () => toggleModal(addProductModal, true));
+        document.querySelector('.close-modal-btn').addEventListener('click', () => toggleModal(addProductModal, false));
+        submitProductBtn.addEventListener('click', handleFormSubmit);
+        productsGrid.addEventListener('click', handleDelete);
+        filterBtn.addEventListener('click', handleFilterClick);
+
         // Initial load
         listenToProducts();
     </script>
 </body>
-                    </html>
-                    
+</html>
