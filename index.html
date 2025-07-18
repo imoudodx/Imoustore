@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>imou store 🇹🇳 - بيع وتبديل</title>
+    <title>imou store 🇹🇳 - المتجر النهائي</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -13,15 +13,16 @@
         body { font-family: 'Cairo', sans-serif; background-color: #111827; color: #f9fafb; }
         .card { background-color: #1f2937; border: 1px solid #374151; transition: transform 0.3s ease, box-shadow 0.3s ease; position: relative; overflow: hidden; }
         .card:hover { transform: translateY(-5px); box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2), 0 4px 6px -2px rgba(0, 0, 0, 0.1); }
-        .modal-backdrop { background-color: rgba(0, 0, 0, 0.7); transition: opacity 0.3s ease; }
+        .modal-backdrop { background-color: rgba(0, 0, 0, 0.7); transition: opacity 0.3s ease; display: none; align-items: center; justify-content: center; }
         .modal-content { background-color: #1f2937; transition: transform 0.3s ease; }
         .btn-primary { background-color: #3b82f6; color: white; transition: background-color 0.2s; }
-        .btn-primary:hover { background-color: #2563eb; }
+        .btn-primary:hover:not(:disabled) { background-color: #2563eb; }
+        .btn-primary:disabled { background-color: #9ca3af; cursor: not-allowed; }
         .btn-secondary { background-color: #6b7280; color: white; }
         .loader { border: 4px solid #f3f3f3; border-top: 4px solid #3b82f6; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin: 20px auto; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         .image-gallery-btn { position: absolute; top: 50%; transform: translateY(-50%); background-color: rgba(0,0,0,0.5); border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; z-index: 20; }
-        .listing-badge { position: absolute; top: 10px; left: 10px; padding: 2px 8px; border-radius: 12px; font-size: 12px; font-weight: bold; color: white; }
+        .listing-badge { position: absolute; top: 10px; left: 10px; padding: 2px 8px; border-radius: 12px; font-size: 12px; font-weight: bold; color: white; z-index: 5; }
         .badge-sale { background-color: #16a34a; }
         .badge-trade { background-color: #2563eb; }
     </style>
@@ -58,7 +59,7 @@
     </main>
 
     <!-- Add Product Modal -->
-    <div id="addProductModal" class="fixed inset-0 z-50 modal-backdrop items-center justify-center hidden opacity-0">
+    <div id="addProductModal" class="fixed inset-0 z-50 modal-backdrop opacity-0">
         <div class="modal-content w-11/12 md:max-w-lg mx-auto rounded-xl shadow-lg p-6 max-h-[90vh] overflow-y-auto">
             <div class="flex justify-between items-center border-b border-gray-600 pb-3 mb-4 sticky top-0 bg-inherit">
                 <h3 id="modalTitle" class="text-2xl font-bold">إضافة منشور جديد</h3>
@@ -72,7 +73,7 @@
                 <textarea id="productDesc" placeholder="وصف المنتج (مثال: ماذا تريد مقابل التبديل؟)" class="form-input w-full p-3 rounded-lg h-24"></textarea>
                 <input type="text" id="facebookLink" placeholder="رابط فيسبوك للتواصل" class="form-input w-full p-3 rounded-lg">
                 <div>
-                    <label class="block mb-2 text-sm font-medium">ارفع صور المنتج (يمكنك اختيار أكثر من صورة)</label>
+                    <label class="block mb-2 text-sm font-medium">ارفع صور المنتج (حد أقصى 5 صور)</label>
                     <input type="file" id="productImages" accept="image/*" class="form-input w-full p-2" multiple>
                 </div>
                 <button id="submitProduct" class="btn-primary w-full p-3 rounded-lg font-bold">نشر المنتج</button>
@@ -81,7 +82,7 @@
     </div>
 
     <!-- View Product Modal -->
-    <div id="viewProductModal" class="fixed inset-0 z-50 modal-backdrop items-center justify-center hidden opacity-0">
+    <div id="viewProductModal" class="fixed inset-0 z-50 modal-backdrop opacity-0">
         <div class="modal-content w-11/12 md:max-w-2xl mx-auto rounded-xl shadow-lg p-6">
              <div class="flex justify-between items-center border-b border-gray-600 pb-3 mb-4">
                 <h3 id="viewProductName" class="text-2xl font-bold"></h3>
@@ -93,7 +94,7 @@
                     <button id="prevImageBtn" class="image-gallery-btn left-2 text-white"><i class="fas fa-chevron-left"></i></button>
                     <button id="nextImageBtn" class="image-gallery-btn right-2 text-white"><i class="fas fa-chevron-right"></i></button>
                 </div>
-                <div id="viewPriceContainer" class="text-2xl font-bold text-blue-400 mb-2"></div>
+                <div id="viewPriceContainer" class="text-2xl font-bold mb-2"></div>
                 <p class="text-gray-300 mb-6" id="viewProductDesc"></p>
                 <a id="viewFacebookLink" href="#" target="_blank" class="btn-primary w-full p-3 rounded-lg font-bold flex items-center justify-center gap-2 text-lg">
                     <i class="fab fa-facebook"></i> <span>رابط التواصل</span>
@@ -105,9 +106,8 @@
     <!-- Firebase SDK -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-        import { getFirestore, collection, addDoc, onSnapshot, query, where, orderBy, deleteDoc, doc, Timestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, onSnapshot, query, where, orderBy, deleteDoc, doc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-        // Your web app's Firebase configuration
         const firebaseConfig = {
           apiKey: "AIzaSyCLOAJl7SheS1akKNf9wKzqElVZk2U6eEc",
           authDomain: "imou-store.firebaseapp.com",
@@ -121,15 +121,13 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // --- Global Variables ---
         const urlParams = new URLSearchParams(window.location.search);
         const isAdmin = urlParams.get('admin') === 'true';
         const productsCollection = collection(db, "products");
         let currentImageIndex = 0;
         let currentProductImages = [];
-        let currentListingType = 'sale'; // 'sale' or 'trade'
+        let currentListingType = 'sale';
 
-        // --- DOM Elements ---
         const loader = document.getElementById('loader');
         const productsGrid = document.getElementById('productsGrid');
         const noResults = document.getElementById('noResults');
@@ -142,9 +140,11 @@
         const addForSaleBtn = document.getElementById('addForSale');
         const addForTradeBtn = document.getElementById('addForTrade');
 
-        // --- Functions ---
         function toBase64(file) {
             return new Promise((resolve, reject) => {
+                if (file.size > 500000) { // Limit file size to 500KB
+                    return reject(new Error("حجم الصورة كبير جدًا، الرجاء اختيار صورة أصغر."));
+                }
                 const reader = new FileReader();
                 reader.readAsDataURL(file);
                 reader.onload = () => resolve(reader.result);
@@ -159,7 +159,6 @@
 
             products.forEach(product => {
                 const adminDeleteBtn = isAdmin ? `<button data-id="${product.id}" class="admin-delete-btn mt-2 w-full bg-red-600 hover:bg-red-700 text-white py-1 rounded-lg">حذف</button>` : '';
-                
                 const badgeClass = product.listingType === 'trade' ? 'badge-trade' : 'badge-sale';
                 const badgeText = product.listingType === 'trade' ? 'للتبديل' : 'للبيع';
                 const priceOrTrade = product.listingType === 'trade' ? 
@@ -167,7 +166,7 @@
                     `<span class="text-green-400 font-bold text-xl my-2">${product.price} دينار</span>`;
 
                 const card = document.createElement('div');
-                card.className = 'card rounded-lg overflow-hidden shadow-lg';
+                card.className = 'card rounded-lg';
                 card.innerHTML = `
                     <div class="listing-badge ${badgeClass}">${badgeText}</div>
                     <img class="w-full h-48 object-cover" src="${product.images[0]}" alt="${product.name}">
@@ -204,15 +203,21 @@
                     }
                 });
                 renderProducts(products);
+            }, (error) => {
+                console.error("Firestore Error: ", error);
+                alert("خطأ في الاتصال بقاعدة البيانات.");
+                loader.style.display = 'none';
             });
         }
 
         function toggleModal(modal, show) {
-            modal.style.display = show ? 'flex' : 'none';
-        }
-
-        function updateGalleryImage() {
-            document.getElementById('viewProductImage').src = currentProductImages[currentImageIndex];
+            if (show) {
+                modal.style.display = 'flex';
+                setTimeout(() => modal.classList.remove('opacity-0'), 10);
+            } else {
+                modal.classList.add('opacity-0');
+                setTimeout(() => modal.style.display = 'none', 300);
+            }
         }
 
         function openAddModal(type) {
@@ -223,7 +228,6 @@
             addPostMenu.classList.add('hidden');
         }
 
-        // --- Event Listeners ---
         addPostBtn.addEventListener('click', () => addPostMenu.classList.toggle('hidden'));
         addForSaleBtn.addEventListener('click', (e) => { e.preventDefault(); openAddModal('sale'); });
         addForTradeBtn.addEventListener('click', (e) => { e.preventDefault(); openAddModal('trade'); });
@@ -242,6 +246,9 @@
             if (!name || !desc || !facebook || imageFiles.length === 0 || (currentListingType === 'sale' && !price)) {
                 alert('الرجاء ملء جميع الحقول ورفع صورة واحدة على الأقل.'); return;
             }
+            if (imageFiles.length > 5) {
+                alert('لا يمكن رفع أكثر من 5 صور.'); return;
+            }
             
             submitProductBtn.disabled = true;
             submitProductBtn.textContent = 'جاري النشر...';
@@ -256,7 +263,7 @@
                     desc, 
                     facebook,
                     images: base64Images, 
-                    createdAt: Timestamp.now(),
+                    createdAt: serverTimestamp(),
                     listingType: currentListingType
                 });
 
@@ -268,7 +275,8 @@
                 document.getElementById('productImages').value = '';
 
             } catch (error) {
-                alert("حدث خطأ أثناء نشر المنتج.");
+                console.error("Submission Error:", error);
+                alert(`حدث خطأ: ${error.message}`);
             } finally {
                 submitProductBtn.disabled = false;
                 submitProductBtn.textContent = 'نشر المنتج';
@@ -276,21 +284,21 @@
         });
 
         productsGrid.addEventListener('click', async (e) => {
-            if (e.target.classList.contains('admin-delete-btn')) {
-                const id = e.target.dataset.id;
+            const target = e.target;
+            if (target.classList.contains('admin-delete-btn')) {
+                const id = target.dataset.id;
                 if (confirm('هل أنت متأكد من حذف هذا المنشور؟')) {
                     await deleteDoc(doc(db, "products", id));
                 }
-            }
-            if (e.target.classList.contains('view-details-btn')) {
-                const product = JSON.parse(e.target.dataset.id);
+            } else if (target.closest('.view-details-btn')) {
+                const product = JSON.parse(target.closest('.view-details-btn').dataset.id);
                 document.getElementById('viewProductName').textContent = product.name;
                 
                 const viewPriceContainer = document.getElementById('viewPriceContainer');
                 if(product.listingType === 'trade'){
                     viewPriceContainer.innerHTML = `<span class="text-blue-400">للتبديل</span>`;
                 } else {
-                    viewPriceContainer.innerHTML = `<span>${product.price}</span> دينار تونسي`;
+                    viewPriceContainer.innerHTML = `<span class="text-green-400">${product.price}</span> دينار تونسي`;
                 }
 
                 document.getElementById('viewProductDesc').textContent = product.desc;
@@ -317,12 +325,16 @@
             const threeHoursAgo = new Date(Date.now() - 3 * 60 * 60 * 1000);
             if (filterBtn.textContent.includes('آخر 3 ساعات')) {
                 listenToProducts(threeHoursAgo);
-                filterBtn.textContent = 'عرض كل المنشورات';
+                filterBtn.textContent = 'عرض الكل';
             } else {
                 listenToProducts();
                 filterBtn.textContent = 'عرض آخر 3 ساعات';
             }
         });
+
+        function updateGalleryImage() {
+            document.getElementById('viewProductImage').src = currentProductImages[currentImageIndex];
+        }
 
         document.getElementById('nextImageBtn').addEventListener('click', () => {
             currentImageIndex = (currentImageIndex + 1) % currentProductImages.length;
@@ -334,9 +346,7 @@
             updateGalleryImage();
         });
 
-        // Initial load
         listenToProducts();
     </script>
 </body>
-                    </html>
-                    
+</html>
