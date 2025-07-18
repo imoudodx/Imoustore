@@ -223,13 +223,15 @@
 
 
 <script>
+    // This script will run after the HTML document is fully loaded
     document.addEventListener('DOMContentLoaded', () => {
         let isAdmin = false;
         let products = [];
         let newPostsToday = 0;
         const POST_FEE = 3;
 
-        // --- Sample Data ---
+        // --- Sample Data (for demonstration) ---
+        // These products will appear when the page loads for the first time.
         const sampleProducts = [
             { id: 1, name: 'حساب ببجي موبايل مستوى 70', price: 150, desc: 'حساب قديم فيه سكنات نادرة وأسلحة مطورة. الربط تويتر فقط.', facebook: 'https://facebook.com', image: 'https://placehold.co/600x400/1f2937/ffffff?text=PUBG+Account' },
             { id: 2, name: 'حساب فري فاير أسطوري', price: 80, desc: 'حساب فيه شخصيات نادرة وفاير باسات قديمة. فرصة لا تعوض.', facebook: 'https://facebook.com', image: 'https://placehold.co/600x400/1f2937/ffffff?text=FreeFire+Account' },
@@ -238,11 +240,13 @@
         ];
         products = [...sampleProducts];
 
-        // --- DOM Elements ---
+        // --- Getting Elements from HTML ---
+        // We get all the interactive parts of the page to add functionality to them.
         const productsGrid = document.getElementById('productsGrid');
         const noResults = document.getElementById('noResults');
         const searchInput = document.getElementById('searchInput');
         const adminPanelBtn = document.getElementById('adminPanelBtn');
+        const addProductBtn = document.getElementById('addProductBtn');
 
         // Modals
         const addProductModal = document.getElementById('addProductModal');
@@ -252,7 +256,15 @@
         const alertMessage = document.getElementById('alertMessage');
         const confirmModal = document.getElementById('confirmModal');
 
+        // Modal Buttons
+        const closeAddModal = document.getElementById('closeAddModal');
+        const closeViewModal = document.getElementById('closeViewModal');
+        const closeAdminModal = document.getElementById('closeAdminModal');
+        const submitProductBtn = document.getElementById('submitProduct');
+
         // --- Functions ---
+        
+        // This function enables the admin view (shows edit/delete buttons)
         function enableAdminView() {
             isAdmin = true;
             adminPanelBtn.style.display = 'flex';
@@ -260,15 +272,21 @@
             renderProducts(products); // Re-render to show admin buttons
         }
 
+        // This function asks for the admin password when the site loads
         function promptForAdmin() {
-            const password = prompt("للدخول كمدير، الرجاء إدخال كلمة المرور:");
-            if (password === "admin123") {
-                enableAdminView();
-            } else if (password !== null) { // if user entered something but it was wrong
-                alert("كلمة المرور غير صحيحة. سيتم عرض الموقع كزائر عادي.");
+            // We use a sessionStorage to remember if the user has already been prompted.
+            if (!sessionStorage.getItem('adminPrompted')) {
+                const password = prompt("للدخول كمدير، الرجاء إدخال كلمة المرور:");
+                if (password === "admin123") {
+                    enableAdminView();
+                } else if (password !== null) {
+                    alert("كلمة المرور غير صحيحة. سيتم عرض الموقع كزائر عادي.");
+                }
+                sessionStorage.setItem('adminPrompted', 'true');
             }
         }
 
+        // This function shows a small notification message
         function showAlert(message, type = 'error') {
             alertMessage.textContent = message;
             alertModal.classList.remove('bg-red-500', 'bg-green-500');
@@ -279,6 +297,7 @@
             }, 3000);
         }
         
+        // This function shows a confirmation dialog (e.g., "Are you sure you want to delete?")
         function showConfirm(title, message, onConfirm) {
             document.getElementById('confirmTitle').textContent = title;
             document.getElementById('confirmMessage').textContent = message;
@@ -307,6 +326,7 @@
             confirmCancel.addEventListener('click', cancelListener, { once: true });
         }
         
+        // This function updates the stats in the admin panel
         function updateAdminStats() {
             if (!isAdmin) return;
             const totalValue = products.reduce((sum, p) => sum + p.price, 0);
@@ -318,6 +338,7 @@
             document.getElementById('totalPosts').textContent = totalPosts;
         }
 
+        // This is a very important function. It takes the product data and creates the HTML cards to display them.
         function renderProducts(productsToRender) {
             productsGrid.innerHTML = '';
             noResults.classList.toggle('hidden', productsToRender.length > 0);
@@ -346,32 +367,6 @@
             updateAdminStats();
         }
 
+        // This function shows or hides the pop-up windows (modals)
         function toggleModal(modal, show) {
-            const content = modal.querySelector('.modal-content');
-            if (show) {
-                modal.classList.remove('hidden');
-                setTimeout(() => {
-                    modal.classList.remove('opacity-0');
-                    if (content) content.classList.remove('-translate-y-10');
-                }, 10);
-            } else {
-                modal.classList.add('opacity-0');
-                if (content) content.classList.add('-translate-y-10');
-                setTimeout(() => {
-                    modal.classList.add('hidden');
-                }, 300);
-            }
-        }
-
-        function resetAddEditModal() {
-            document.getElementById('modalTitle').textContent = 'إضافة منتج جديد';
-            document.getElementById('submitProduct').textContent = 'نشر المنتج';
-            document.getElementById('editingProductId').value = '';
-            document.getElementById('productName').value = '';
-            document.getElementById('productPrice').value = '';
-            document.getElementById('productDesc').value = '';
-            document.getElementById('facebookLink').value = '';
-            document.getElementById('productImage').value = '';
-            document.getElementById('imagePreview').classList.add('hidden');
-            document.getElementById('paymentConfirmation').checked = false;
-            document.getElementById('paymentInstructions').style.display = 'block'
+         
