@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>imou store 🇹🇳 - متجر الحسابات</title>
+    <title>imou store 🇹🇳 - بيع وتبديل</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         body { font-family: 'Cairo', sans-serif; background-color: #111827; color: #f9fafb; }
-        .card { background-color: #1f2937; border: 1px solid #374151; transition: transform 0.3s ease, box-shadow 0.3s ease; }
+        .card { background-color: #1f2937; border: 1px solid #374151; transition: transform 0.3s ease, box-shadow 0.3s ease; position: relative; overflow: hidden; }
         .card:hover { transform: translateY(-5px); box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2), 0 4px 6px -2px rgba(0, 0, 0, 0.1); }
         .modal-backdrop { background-color: rgba(0, 0, 0, 0.7); transition: opacity 0.3s ease; }
         .modal-content { background-color: #1f2937; transition: transform 0.3s ease; }
@@ -20,6 +20,10 @@
         .btn-secondary { background-color: #6b7280; color: white; }
         .loader { border: 4px solid #f3f3f3; border-top: 4px solid #3b82f6; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin: 20px auto; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .image-gallery-btn { position: absolute; top: 50%; transform: translateY(-50%); background-color: rgba(0,0,0,0.5); border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; z-index: 20; }
+        .listing-badge { position: absolute; top: 10px; left: 10px; padding: 2px 8px; border-radius: 12px; font-size: 12px; font-weight: bold; color: white; }
+        .badge-sale { background-color: #16a34a; }
+        .badge-trade { background-color: #2563eb; }
     </style>
 </head>
 <body>
@@ -30,9 +34,15 @@
             <h1 class="text-3xl font-bold text-white">imou store <span class="text-red-500">🇹🇳</span></h1>
             <div class="flex gap-2">
                 <button id="filterBtn" class="btn-secondary py-2 px-4 rounded-lg text-sm">عرض آخر 3 ساعات</button>
-                <button id="addProductBtn" class="btn-primary py-2 px-4 rounded-lg font-semibold flex items-center justify-center gap-2">
-                    <i class="fas fa-plus-circle"></i> <span>أضف منتج</span>
-                </button>
+                <div class="relative">
+                    <button id="addPostBtn" class="btn-primary py-2 px-4 rounded-lg font-semibold flex items-center justify-center gap-2">
+                        <i class="fas fa-plus-circle"></i> <span>أضف منشور</span> <i class="fas fa-chevron-down text-xs"></i>
+                    </button>
+                    <div id="addPostMenu" class="absolute left-0 mt-2 w-48 bg-gray-700 rounded-md shadow-lg z-50 hidden">
+                        <a href="#" id="addForSale" class="block px-4 py-2 text-sm text-white hover:bg-gray-600">إضافة منشور للبيع</a>
+                        <a href="#" id="addForTrade" class="block px-4 py-2 text-sm text-white hover:bg-gray-600">إضافة منشور للتبديل</a>
+                    </div>
+                </div>
             </div>
         </div>
     </header>
@@ -51,28 +61,51 @@
     <div id="addProductModal" class="fixed inset-0 z-50 modal-backdrop items-center justify-center hidden opacity-0">
         <div class="modal-content w-11/12 md:max-w-lg mx-auto rounded-xl shadow-lg p-6 max-h-[90vh] overflow-y-auto">
             <div class="flex justify-between items-center border-b border-gray-600 pb-3 mb-4 sticky top-0 bg-inherit">
-                <h3 class="text-2xl font-bold">إضافة منتج جديد</h3>
+                <h3 id="modalTitle" class="text-2xl font-bold">إضافة منشور جديد</h3>
                 <button class="close-modal-btn text-gray-400 hover:text-white text-3xl">&times;</button>
             </div>
             <div class="space-y-4">
                 <input type="text" id="productName" placeholder="اسم المنتج" class="form-input w-full p-3 rounded-lg">
-                <input type="number" id="productPrice" placeholder="السعر بالدينار التونسي" class="form-input w-full p-3 rounded-lg">
-                <textarea id="productDesc" placeholder="وصف المنتج" class="form-input w-full p-3 rounded-lg h-24"></textarea>
+                <div id="priceContainer">
+                    <input type="number" id="productPrice" placeholder="السعر بالدينار التونسي" class="form-input w-full p-3 rounded-lg">
+                </div>
+                <textarea id="productDesc" placeholder="وصف المنتج (مثال: ماذا تريد مقابل التبديل؟)" class="form-input w-full p-3 rounded-lg h-24"></textarea>
                 <input type="text" id="facebookLink" placeholder="رابط فيسبوك للتواصل" class="form-input w-full p-3 rounded-lg">
                 <div>
-                    <label class="block mb-2 text-sm font-medium">ارفع صور المنتج</label>
+                    <label class="block mb-2 text-sm font-medium">ارفع صور المنتج (يمكنك اختيار أكثر من صورة)</label>
                     <input type="file" id="productImages" accept="image/*" class="form-input w-full p-2" multiple>
                 </div>
                 <button id="submitProduct" class="btn-primary w-full p-3 rounded-lg font-bold">نشر المنتج</button>
             </div>
         </div>
     </div>
+
+    <!-- View Product Modal -->
+    <div id="viewProductModal" class="fixed inset-0 z-50 modal-backdrop items-center justify-center hidden opacity-0">
+        <div class="modal-content w-11/12 md:max-w-2xl mx-auto rounded-xl shadow-lg p-6">
+             <div class="flex justify-between items-center border-b border-gray-600 pb-3 mb-4">
+                <h3 id="viewProductName" class="text-2xl font-bold"></h3>
+                <button class="close-modal-btn text-gray-400 hover:text-white text-3xl">&times;</button>
+            </div>
+            <div>
+                <div class="relative mb-4">
+                    <img id="viewProductImage" src="" class="w-full h-64 object-contain rounded-lg bg-gray-900">
+                    <button id="prevImageBtn" class="image-gallery-btn left-2 text-white"><i class="fas fa-chevron-left"></i></button>
+                    <button id="nextImageBtn" class="image-gallery-btn right-2 text-white"><i class="fas fa-chevron-right"></i></button>
+                </div>
+                <div id="viewPriceContainer" class="text-2xl font-bold text-blue-400 mb-2"></div>
+                <p class="text-gray-300 mb-6" id="viewProductDesc"></p>
+                <a id="viewFacebookLink" href="#" target="_blank" class="btn-primary w-full p-3 rounded-lg font-bold flex items-center justify-center gap-2 text-lg">
+                    <i class="fab fa-facebook"></i> <span>رابط التواصل</span>
+                </a>
+            </div>
+        </div>
+    </div>
     
     <!-- Firebase SDK -->
     <script type="module">
-        // Import the functions you need from the SDKs you need
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-        import { getFirestore, collection, addDoc, onSnapshot, query, where, serverTimestamp, deleteDoc, doc, orderBy, Timestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, onSnapshot, query, where, orderBy, deleteDoc, doc, Timestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
         // Your web app's Firebase configuration
         const firebaseConfig = {
@@ -85,7 +118,6 @@
           measurementId: "G-NMZRPEQ45Q"
         };
         
-        // Initialize Firebase
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
@@ -93,18 +125,24 @@
         const urlParams = new URLSearchParams(window.location.search);
         const isAdmin = urlParams.get('admin') === 'true';
         const productsCollection = collection(db, "products");
+        let currentImageIndex = 0;
+        let currentProductImages = [];
+        let currentListingType = 'sale'; // 'sale' or 'trade'
 
         // --- DOM Elements ---
         const loader = document.getElementById('loader');
         const productsGrid = document.getElementById('productsGrid');
         const noResults = document.getElementById('noResults');
-        const addProductBtn = document.getElementById('addProductBtn');
         const addProductModal = document.getElementById('addProductModal');
+        const viewProductModal = document.getElementById('viewProductModal');
         const submitProductBtn = document.getElementById('submitProduct');
         const filterBtn = document.getElementById('filterBtn');
+        const addPostBtn = document.getElementById('addPostBtn');
+        const addPostMenu = document.getElementById('addPostMenu');
+        const addForSaleBtn = document.getElementById('addForSale');
+        const addForTradeBtn = document.getElementById('addForTrade');
 
         // --- Functions ---
-        
         function toBase64(file) {
             return new Promise((resolve, reject) => {
                 const reader = new FileReader();
@@ -120,16 +158,23 @@
             loader.style.display = 'none';
 
             products.forEach(product => {
-                const adminDeleteBtn = isAdmin ? `<button data-id="${product.id}" class="admin-delete-btn mt-2 w-full bg-red-600 text-white py-1 rounded-lg">حذف</button>` : '';
+                const adminDeleteBtn = isAdmin ? `<button data-id="${product.id}" class="admin-delete-btn mt-2 w-full bg-red-600 hover:bg-red-700 text-white py-1 rounded-lg">حذف</button>` : '';
+                
+                const badgeClass = product.listingType === 'trade' ? 'badge-trade' : 'badge-sale';
+                const badgeText = product.listingType === 'trade' ? 'للتبديل' : 'للبيع';
+                const priceOrTrade = product.listingType === 'trade' ? 
+                    `<span class="text-blue-400 font-bold text-xl my-2">للتبديل</span>` :
+                    `<span class="text-green-400 font-bold text-xl my-2">${product.price} دينار</span>`;
+
                 const card = document.createElement('div');
                 card.className = 'card rounded-lg overflow-hidden shadow-lg';
                 card.innerHTML = `
+                    <div class="listing-badge ${badgeClass}">${badgeText}</div>
                     <img class="w-full h-48 object-cover" src="${product.images[0]}" alt="${product.name}">
                     <div class="p-4">
                         <h3 class="font-bold text-lg truncate">${product.name}</h3>
-                        <p class="text-blue-400 font-bold text-xl my-2">${product.price} دينار</p>
-                        <p class="text-gray-400 text-sm h-10 overflow-hidden">${product.desc}</p>
-                        <a href="${product.facebook}" target="_blank" class="mt-4 block w-full text-center btn-secondary py-2 rounded-lg">تواصل مع البائع</a>
+                        ${priceOrTrade}
+                        <button class="view-details-btn w-full btn-secondary py-2 px-4 rounded-lg" data-id='${JSON.stringify(product)}'>عرض التفاصيل</button>
                         ${adminDeleteBtn}
                     </div>
                 `;
@@ -139,13 +184,7 @@
 
         function listenToProducts(filterDate = null) {
             loader.style.display = 'block';
-            let q;
-            
-            if (filterDate) {
-                q = query(productsCollection, where("createdAt", ">=", filterDate), orderBy("createdAt", "desc"));
-            } else {
-                q = query(productsCollection, orderBy("createdAt", "desc"));
-            }
+            let q = filterDate ? query(productsCollection, where("createdAt", ">=", filterDate), orderBy("createdAt", "desc")) : query(productsCollection, orderBy("createdAt", "desc"));
 
             onSnapshot(q, (snapshot) => {
                 const products = [];
@@ -157,50 +196,68 @@
                     
                     if (productData.createdAt) {
                         const postDate = productData.createdAt.toDate();
-                        
                         if (postDate < fortyEightHoursAgo && !isAdmin) {
                             deleteDoc(doc(db, "products", productId));
                         } else {
                             products.push({ id: productId, ...productData });
                         }
-                    } else {
-                        products.push({ id: productId, ...productData });
                     }
                 });
                 renderProducts(products);
-            }, (error) => {
-                console.error("Error listening to products: ", error);
-                loader.style.display = 'none';
-                alert("حدث خطأ في الاتصال بقاعدة البيانات.");
             });
         }
 
-        async function handleFormSubmit() {
+        function toggleModal(modal, show) {
+            modal.style.display = show ? 'flex' : 'none';
+        }
+
+        function updateGalleryImage() {
+            document.getElementById('viewProductImage').src = currentProductImages[currentImageIndex];
+        }
+
+        function openAddModal(type) {
+            currentListingType = type;
+            document.getElementById('modalTitle').textContent = type === 'sale' ? 'إضافة منشور للبيع' : 'إضافة منشور للتبديل';
+            document.getElementById('priceContainer').style.display = type === 'sale' ? 'block' : 'none';
+            toggleModal(addProductModal, true);
+            addPostMenu.classList.add('hidden');
+        }
+
+        // --- Event Listeners ---
+        addPostBtn.addEventListener('click', () => addPostMenu.classList.toggle('hidden'));
+        addForSaleBtn.addEventListener('click', (e) => { e.preventDefault(); openAddModal('sale'); });
+        addForTradeBtn.addEventListener('click', (e) => { e.preventDefault(); openAddModal('trade'); });
+
+        document.querySelectorAll('.close-modal-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => toggleModal(e.target.closest('.modal-backdrop'), false));
+        });
+        
+        submitProductBtn.addEventListener('click', async () => {
             const name = document.getElementById('productName').value.trim();
             const price = document.getElementById('productPrice').value.trim();
             const desc = document.getElementById('productDesc').value.trim();
             const facebook = document.getElementById('facebookLink').value.trim();
             const imageFiles = document.getElementById('productImages').files;
 
-            if (!name || !price || !desc || !facebook || imageFiles.length === 0) {
-                alert('الرجاء ملء جميع الحقول ورفع صورة واحدة على الأقل.');
-                return;
+            if (!name || !desc || !facebook || imageFiles.length === 0 || (currentListingType === 'sale' && !price)) {
+                alert('الرجاء ملء جميع الحقول ورفع صورة واحدة على الأقل.'); return;
             }
             
             submitProductBtn.disabled = true;
             submitProductBtn.textContent = 'جاري النشر...';
 
             try {
-                const imagePromises = Array.from(imageFiles).map(file => toBase64(file));
+                const imagePromises = Array.from(imageFiles).map(toBase64);
                 const base64Images = await Promise.all(imagePromises);
 
                 await addDoc(productsCollection, {
-                    name,
-                    price: Number(price),
-                    desc,
+                    name, 
+                    price: currentListingType === 'sale' ? Number(price) : 0, 
+                    desc, 
                     facebook,
-                    images: base64Images,
-                    createdAt: Timestamp.now()
+                    images: base64Images, 
+                    createdAt: Timestamp.now(),
+                    listingType: currentListingType
                 });
 
                 toggleModal(addProductModal, false);
@@ -211,29 +268,52 @@
                 document.getElementById('productImages').value = '';
 
             } catch (error) {
-                console.error("Error adding document: ", error);
-                alert("حدث خطأ أثناء نشر المنتج. يرجى المحاولة مرة أخرى.");
+                alert("حدث خطأ أثناء نشر المنتج.");
             } finally {
                 submitProductBtn.disabled = false;
                 submitProductBtn.textContent = 'نشر المنتج';
             }
-        }
+        });
 
-        async function handleDelete(e) {
+        productsGrid.addEventListener('click', async (e) => {
             if (e.target.classList.contains('admin-delete-btn')) {
                 const id = e.target.dataset.id;
                 if (confirm('هل أنت متأكد من حذف هذا المنشور؟')) {
-                    try {
-                        await deleteDoc(doc(db, "products", id));
-                    } catch (error) {
-                        console.error("Error deleting document: ", error);
-                        alert("حدث خطأ أثناء الحذف.");
-                    }
+                    await deleteDoc(doc(db, "products", id));
                 }
             }
-        }
+            if (e.target.classList.contains('view-details-btn')) {
+                const product = JSON.parse(e.target.dataset.id);
+                document.getElementById('viewProductName').textContent = product.name;
+                
+                const viewPriceContainer = document.getElementById('viewPriceContainer');
+                if(product.listingType === 'trade'){
+                    viewPriceContainer.innerHTML = `<span class="text-blue-400">للتبديل</span>`;
+                } else {
+                    viewPriceContainer.innerHTML = `<span>${product.price}</span> دينار تونسي`;
+                }
+
+                document.getElementById('viewProductDesc').textContent = product.desc;
+                document.getElementById('viewFacebookLink').href = product.facebook;
+                
+                currentProductImages = product.images;
+                currentImageIndex = 0;
+                updateGalleryImage();
+
+                const prevBtn = document.getElementById('prevImageBtn');
+                const nextBtn = document.getElementById('nextImageBtn');
+                if (currentProductImages.length <= 1) {
+                    prevBtn.style.display = 'none';
+                    nextBtn.style.display = 'none';
+                } else {
+                    prevBtn.style.display = 'flex';
+                    nextBtn.style.display = 'flex';
+                }
+                toggleModal(viewProductModal, true);
+            }
+        });
         
-        function handleFilterClick() {
+        filterBtn.addEventListener('click', () => {
             const threeHoursAgo = new Date(Date.now() - 3 * 60 * 60 * 1000);
             if (filterBtn.textContent.includes('آخر 3 ساعات')) {
                 listenToProducts(threeHoursAgo);
@@ -242,27 +322,21 @@
                 listenToProducts();
                 filterBtn.textContent = 'عرض آخر 3 ساعات';
             }
-        }
+        });
 
-        function toggleModal(modal, show) {
-            if (show) {
-                modal.classList.remove('hidden');
-                setTimeout(() => modal.classList.remove('opacity-0'), 10);
-            } else {
-                modal.classList.add('opacity-0');
-                setTimeout(() => modal.classList.add('hidden'), 300);
-            }
-        }
+        document.getElementById('nextImageBtn').addEventListener('click', () => {
+            currentImageIndex = (currentImageIndex + 1) % currentProductImages.length;
+            updateGalleryImage();
+        });
 
-        // --- Event Listeners ---
-        addProductBtn.addEventListener('click', () => toggleModal(addProductModal, true));
-        document.querySelector('.close-modal-btn').addEventListener('click', () => toggleModal(addProductModal, false));
-        submitProductBtn.addEventListener('click', handleFormSubmit);
-        productsGrid.addEventListener('click', handleDelete);
-        filterBtn.addEventListener('click', handleFilterClick);
+        document.getElementById('prevImageBtn').addEventListener('click', () => {
+            currentImageIndex = (currentImageIndex - 1 + currentProductImages.length) % currentProductImages.length;
+            updateGalleryImage();
+        });
 
         // Initial load
         listenToProducts();
     </script>
 </body>
-</html>
+                    </html>
+                    
