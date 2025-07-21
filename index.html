@@ -37,7 +37,7 @@
         <div class="container mx-auto flex justify-between items-center">
             <div class="flex items-center gap-4">
                 <div id="profilePicContainer" class="profile-pic-container">
-                    <img id="profilePic" src="https://placehold.co/48x48/1f2937/ffffff?text=H" alt="Profile Picture" class="w-12 h-12 rounded-full border-2 border-blue-500 object-cover">
+                    <img id="profilePic" src="https://i.imgur.com/8Q5tG8a.jpg" alt="Profile Picture" class="w-12 h-12 rounded-full border-2 border-blue-500 object-cover" onerror="this.onerror=null;this.src='https://placehold.co/48x48/1f2937/ffffff?text=H';">
                     <div class="edit-icon"><i class="fas fa-pencil-alt"></i></div>
                     <input type="file" id="profilePicInput" class="hidden" accept="image/*">
                 </div>
@@ -222,6 +222,10 @@
                     }
                 });
                 renderProducts(products);
+            }, (error) => {
+                console.error("Firestore Error: ", error);
+                alert("خطأ في الاتصال بقاعدة البيانات.");
+                loader.style.display = 'none';
             });
         }
 
@@ -301,6 +305,7 @@
                 document.getElementById('productImages').value = '';
 
             } catch (error) {
+                console.error("Submission Error:", error);
                 alert(`حدث خطأ: ${error.message}`);
             } finally {
                 submitProductBtn.disabled = false;
@@ -349,13 +354,4 @@
         filterBtn.addEventListener('click', () => {
             const threeHoursAgo = new Date(Date.now() - 3 * 60 * 60 * 1000);
             if (filterBtn.textContent.includes('آخر 3 ساعات')) {
-                listenToProducts(threeHoursAgo);
-                filterBtn.textContent = 'عرض الكل';
-            } else {
-                listenToProducts();
-                filterBtn.textContent = 'عرض آخر 3 ساعات';
-            }
-        });
-
-        function updateGalleryImage() {
-            document.getElementById('viewP
+   
