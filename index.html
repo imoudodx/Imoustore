@@ -25,15 +25,22 @@
         .listing-badge { position: absolute; top: 10px; left: 10px; padding: 2px 8px; border-radius: 12px; font-size: 12px; font-weight: bold; color: white; z-index: 5; }
         .badge-sale { background-color: #16a34a; }
         .badge-trade { background-color: #2563eb; }
+        .profile-pic-container { position: relative; cursor: pointer; }
+        .edit-icon { position: absolute; bottom: 0; right: 0; background-color: rgba(0,0,0,0.7); color: white; border-radius: 50%; width: 20px; height: 20px; display: none; align-items: center; justify-content: center; font-size: 10px; }
+        .admin-mode .edit-icon { display: flex; }
     </style>
 </head>
-<body>
+<body class="">
 
     <!-- Header -->
     <header class="bg-gray-800 shadow-lg py-4 px-6 sticky top-0 z-40">
         <div class="container mx-auto flex justify-between items-center">
             <div class="flex items-center gap-4">
-                <img src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAHMA+gDASIAAhEBAxEB/8QAGwABAAIDAQEAAAAAAAAAAAAAAAUGAwQHAgH/xABIEAABAwIFAgQDBgAEBAMFCQABAgMEBREABhIhMQcTQVEiYRQycYGRoQgVI0KxwdHwFjNS4RclYnKC8ZKyNDVDU2Nzg5Oi0v/EABQBAQAAAAAAAAAAAAAAAAAAAAD/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwD6hRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUBRRRQFFFFAUUUUB-alt="Profile Picture" class="w-12 h-12 rounded-full border-2 border-blue-500 object-cover">
+                <div id="profilePicContainer" class="profile-pic-container">
+                    <img id="profilePic" src="https://placehold.co/48x48/1f2937/ffffff?text=H" alt="Profile Picture" class="w-12 h-12 rounded-full border-2 border-blue-500 object-cover">
+                    <div class="edit-icon"><i class="fas fa-pencil-alt"></i></div>
+                    <input type="file" id="profilePicInput" class="hidden" accept="image/*">
+                </div>
                 <h1 class="text-2xl md:text-3xl font-bold text-white">👑HAMA👑 STORE</h1>
             </div>
             <div class="flex gap-2">
@@ -109,7 +116,7 @@
     <!-- Firebase SDK -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-        import { getFirestore, collection, addDoc, onSnapshot, query, where, orderBy, deleteDoc, doc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, onSnapshot, query, where, orderBy, deleteDoc, doc, serverTimestamp, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
         const firebaseConfig = {
           apiKey: "AIzaSyCLOAJl7SheS1akKNf9wKzqElVZk2U6eEc",
@@ -126,7 +133,13 @@
 
         const urlParams = new URLSearchParams(window.location.search);
         const isAdmin = urlParams.get('admin') === 'true';
+        if (isAdmin) {
+            document.body.classList.add('admin-mode');
+        }
+
         const productsCollection = collection(db, "products");
+        const configDocRef = doc(db, "siteConfig", "profile");
+
         let currentImageIndex = 0;
         let currentProductImages = [];
         let currentListingType = 'sale';
@@ -142,11 +155,14 @@
         const addPostMenu = document.getElementById('addPostMenu');
         const addForSaleBtn = document.getElementById('addForSale');
         const addForTradeBtn = document.getElementById('addForTrade');
+        const profilePicContainer = document.getElementById('profilePicContainer');
+        const profilePicInput = document.getElementById('profilePicInput');
+        const profilePic = document.getElementById('profilePic');
 
         function toBase64(file) {
             return new Promise((resolve, reject) => {
                 if (file.size > 500000) { // Limit file size to 500KB
-                    return reject(new Error("حجم الصورة كبير جدًا، الرجاء اختيار صورة أصغر."));
+                    return reject(new Error("حجم الصورة كبير جدًا (الحد الأقصى 500KB)."));
                 }
                 const reader = new FileReader();
                 reader.readAsDataURL(file);
@@ -176,7 +192,7 @@
                     <div class="p-4">
                         <h3 class="font-bold text-lg truncate">${product.name}</h3>
                         ${priceOrTrade}
-                        <button class="view-details-btn w-full btn-secondary py-2 px-4 rounded-lg" data-id='${JSON.stringify(product)}'>عرض التفاصيل</button>
+                        <button class="view-details-btn w-full btn-secondary py-2 px-4 rounded-lg" data-product='${JSON.stringify(product)}'>عرض التفاصيل</button>
                         ${adminDeleteBtn}
                     </div>
                 `;
@@ -206,10 +222,6 @@
                     }
                 });
                 renderProducts(products);
-            }, (error) => {
-                console.error("Firestore Error: ", error);
-                alert("خطأ في الاتصال بقاعدة البيانات.");
-                loader.style.display = 'none';
             });
         }
 
@@ -230,6 +242,17 @@
             toggleModal(addProductModal, true);
             addPostMenu.classList.add('hidden');
         }
+        
+        async function loadProfilePicture() {
+            onSnapshot(configDocRef, (doc) => {
+                if (doc.exists() && doc.data().imageUrl) {
+                    profilePic.src = doc.data().imageUrl;
+                } else {
+                    // Use a default image if none is set
+                    profilePic.src = "https://i.imgur.com/8Q5tG8a.jpg";
+                }
+            });
+        }
 
         addPostBtn.addEventListener('click', () => addPostMenu.classList.toggle('hidden'));
         addForSaleBtn.addEventListener('click', (e) => { e.preventDefault(); openAddModal('sale'); });
@@ -243,4 +266,96 @@
             const name = document.getElementById('productName').value.trim();
             const price = document.getElementById('productPrice').value.trim();
             const desc = document.getElementById('productDesc').value.trim();
-            const faceboo
+            const facebook = document.getElementById('facebookLink').value.trim();
+            const imageFiles = document.getElementById('productImages').files;
+
+            if (!name || !desc || !facebook || imageFiles.length === 0 || (currentListingType === 'sale' && !price)) {
+                alert('الرجاء ملء جميع الحقول ورفع صورة واحدة على الأقل.'); return;
+            }
+            if (imageFiles.length > 5) {
+                alert('لا يمكن رفع أكثر من 5 صور.'); return;
+            }
+            
+            submitProductBtn.disabled = true;
+            submitProductBtn.textContent = 'جاري النشر...';
+
+            try {
+                const imagePromises = Array.from(imageFiles).map(toBase64);
+                const base64Images = await Promise.all(imagePromises);
+
+                await addDoc(productsCollection, {
+                    name, 
+                    price: currentListingType === 'sale' ? Number(price) : 0, 
+                    desc, 
+                    facebook,
+                    images: base64Images, 
+                    createdAt: serverTimestamp(),
+                    listingType: currentListingType
+                });
+
+                toggleModal(addProductModal, false);
+                document.getElementById('productName').value = '';
+                document.getElementById('productPrice').value = '';
+                document.getElementById('productDesc').value = '';
+                document.getElementById('facebookLink').value = '';
+                document.getElementById('productImages').value = '';
+
+            } catch (error) {
+                alert(`حدث خطأ: ${error.message}`);
+            } finally {
+                submitProductBtn.disabled = false;
+                submitProductBtn.textContent = 'نشر المنتج';
+            }
+        });
+
+        productsGrid.addEventListener('click', async (e) => {
+            const target = e.target;
+            if (target.classList.contains('admin-delete-btn')) {
+                const id = target.dataset.id;
+                if (confirm('هل أنت متأكد من حذف هذا المنشور؟')) {
+                    await deleteDoc(doc(db, "products", id));
+                }
+            } else if (target.closest('.view-details-btn')) {
+                const product = JSON.parse(target.closest('.view-details-btn').dataset.product);
+                document.getElementById('viewProductName').textContent = product.name;
+                
+                const viewPriceContainer = document.getElementById('viewPriceContainer');
+                if(product.listingType === 'trade'){
+                    viewPriceContainer.innerHTML = `<span class="text-blue-400">للتبديل</span>`;
+                } else {
+                    viewPriceContainer.innerHTML = `<span class="text-green-400">${product.price}</span> دينار تونسي`;
+                }
+
+                document.getElementById('viewProductDesc').textContent = product.desc;
+                document.getElementById('viewFacebookLink').href = product.facebook;
+                
+                currentProductImages = product.images;
+                currentImageIndex = 0;
+                updateGalleryImage();
+
+                const prevBtn = document.getElementById('prevImageBtn');
+                const nextBtn = document.getElementById('nextImageBtn');
+                if (currentProductImages.length <= 1) {
+                    prevBtn.style.display = 'none';
+                    nextBtn.style.display = 'none';
+                } else {
+                    prevBtn.style.display = 'flex';
+                    nextBtn.style.display = 'flex';
+                }
+                toggleModal(viewProductModal, true);
+            }
+        });
+        
+        filterBtn.addEventListener('click', () => {
+            const threeHoursAgo = new Date(Date.now() - 3 * 60 * 60 * 1000);
+            if (filterBtn.textContent.includes('آخر 3 ساعات')) {
+                listenToProducts(threeHoursAgo);
+                filterBtn.textContent = 'عرض الكل';
+            } else {
+                listenToProducts();
+                filterBtn.textContent = 'عرض آخر 3 ساعات';
+            }
+        });
+
+        function updateGalleryImage() {
+            document.getElementById('viewP
